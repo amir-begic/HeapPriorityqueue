@@ -20,27 +20,21 @@ namespace MinMaxHeap {
         }
 
         private static int GetParentIndex(int idx) {
-            // TODO: Implement
-
-            throw new NotImplementedException();
+            return (idx - 1) / 2;
         }
 
         private static int GetLeftIndex(int idx) {
-            // TODO: Implement
-
-            throw new NotImplementedException();
+            return 2 * idx + 1;
         }
 
         private static int GetRightIndex(int idx) {
-            // TODO: Implement
-
-            throw new NotImplementedException();
+            return 2 * idx + 2;
         }
 
         public void Add(object item) {
-            // TODO: Implement
 
-            throw new NotImplementedException();
+            data.Add(item);
+            Enqueue(Size - 1);
         }
 
         public bool Empty => this.data.Count <= 0;
@@ -48,15 +42,74 @@ namespace MinMaxHeap {
         public int Size => this.data.Count;
 
         public object Peek() {
-            // TODO: Implement
 
-            throw new NotImplementedException();
+            if (Empty)
+            {
+                return "No Items in tree";
+            }
+            return data[0];
+           
         }
 
         public object Pop() {
-            // TODO: Implement
+            if (Empty)
+            {
+                return "No Items in tree";
+            }
+            var firstInQueue = data[0];
+            Swap(0, Size - 1);
+            data.RemoveAt(Size - 1);
+            Dequeue(0);
+            return firstInQueue;
+        }
 
-            throw new NotImplementedException();
+        public void Swap(int idx1, int idx2)
+        {
+            var temp = data[idx1];
+            data[idx1] = data[idx2];
+            data[idx2] = temp;
+        }
+
+        public void Enqueue(int idx)
+        {
+            if (idx == 0)
+            {
+                return;
+            }
+
+            var pIndex = GetParentIndex(idx);
+            if (Comparer.Default.Compare(data[idx], data[pIndex]) <= 0)
+            {
+                return;
+            }
+
+            Swap(idx, pIndex);
+            Enqueue(pIndex);
+        }
+
+        public void Dequeue(int idx)
+        {
+            var leftChildIndex = GetLeftIndex(idx);
+            var rightChildIndex = GetRightIndex(idx);
+            var largest = idx;
+
+            if (Size > leftChildIndex && Comparer.Default.Compare(data[leftChildIndex], data[largest]) > 0)
+            {
+                largest = leftChildIndex;
+            }
+
+            if (Size > rightChildIndex && Comparer.Default.Compare(data[rightChildIndex], data[largest]) > 0)
+            {
+                largest = rightChildIndex;
+            }
+
+            if (largest == idx)
+            {
+                return;
+            }
+
+            Swap(largest, idx);
+            Dequeue(largest);
         }
 
         public void PrintHeap() {
